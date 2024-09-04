@@ -10,5 +10,5 @@ public interface CursoDAO {
     public List<Curso> listar();
     public Curso buscarPorId(Integer id);
     public void atualizar(Curso curso);
-    public void deletar(Curso curso);
+    public void deletar(Integer id);
 }
