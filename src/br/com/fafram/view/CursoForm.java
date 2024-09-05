@@ -4,8 +4,10 @@ import br.com.fafram.dao.CursoDAOImpl;
 import br.com.fafram.model.Curso;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class CursoForm {
     private JPanel panel;
@@ -18,6 +20,8 @@ public class CursoForm {
     private JTable tableCursos;
 
     public CursoForm() {
+        carregaTabela();
+
         cadastrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -38,6 +42,11 @@ public class CursoForm {
             CursoDAOImpl cursoDAO = new CursoDAOImpl();
             cursoDAO.cadastrar(curso);
         }
+
+        textFieldNome.setText("");
+        textFieldCarga.setText("");
+
+        carregaTabela();
     }
 
     public boolean validaEntrada(String nome, String carga) {
@@ -59,6 +68,26 @@ public class CursoForm {
             return false;
         }
         return true;
+    }
+
+    public void carregaTabela() {
+        DefaultTableModel tableModel = new DefaultTableModel();
+        tableModel.addColumn("ID");
+        tableModel.addColumn("Nome");
+        tableModel.addColumn("Carga horária");
+        tableModel.setRowCount(0); // limpa a tabela
+
+        CursoDAOImpl cursoDAO = new CursoDAOImpl();
+        List<Curso> cursos = cursoDAO.listar();
+
+        for (Curso curso : cursos) {
+            tableModel.addRow(new Object[]{
+                    curso.getId(),
+                    curso.getNome(),
+                    curso.getCargaHoraria()
+            });
+            tableCursos.setModel(tableModel);
+        }
     }
 
     public static void main(String[] args) {

@@ -31,7 +31,7 @@ public class CursoDAOImpl implements CursoDAO {
 
     @Override
     public List<Curso> listar() {
-        String sql = "SELECT * FROM curso";
+        String sql = "SELECT * FROM cursos";
         List<Curso> cursos = new ArrayList<>();
 
         try {
