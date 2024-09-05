@@ -28,6 +28,21 @@ public class CursoForm {
                 cadastrar();
             }
         });
+
+        apagarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int selectedRow = tableCursos.getSelectedRow();
+                Integer id = (Integer) tableCursos.getValueAt(selectedRow, 0); // id está na coluna 0
+                System.out.println(id);
+
+                CursoDAOImpl cursoDAO = new CursoDAOImpl();
+                cursoDAO.deletar(id);
+
+                carregaTabela();
+            }
+        });
     }
 
     public void cadastrar() {
