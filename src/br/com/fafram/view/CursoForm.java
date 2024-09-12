@@ -4,6 +4,8 @@ import br.com.fafram.dao.CursoDAOImpl;
 import br.com.fafram.model.Curso;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,12 +37,53 @@ public class CursoForm {
 
                 int selectedRow = tableCursos.getSelectedRow();
                 Integer id = (Integer) tableCursos.getValueAt(selectedRow, 0); // id está na coluna 0
-                System.out.println(id);
 
                 CursoDAOImpl cursoDAO = new CursoDAOImpl();
                 cursoDAO.deletar(id);
 
                 carregaTabela();
+            }
+        });
+
+        atualizarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                String id = textFieldId.getText();
+                String nome = textFieldNome.getText();
+                String carga = textFieldCarga.getText();
+
+                Curso curso = new Curso();
+                curso.setId(Integer.valueOf(id));
+                curso.setNome(nome);
+                curso.setCargaHoraria(Integer.valueOf(carga));
+
+                CursoDAOImpl cursoDAO = new CursoDAOImpl();
+                cursoDAO.atualizar(curso);
+
+                textFieldId.setText("");
+                textFieldNome.setText("");
+                textFieldCarga.setText("");
+
+                carregaTabela();
+            }
+        });
+
+
+        tableCursos.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+
+                int selectedRow = tableCursos.getSelectedRow();
+                if (selectedRow >= 0){
+                    Integer id = (Integer) tableCursos.getValueAt(selectedRow, 0); // primeira coluna é o ID
+                    String nome = (String) tableCursos.getValueAt(selectedRow, 1);
+                    Integer carga = (Integer) tableCursos.getValueAt(selectedRow, 2);
+
+                    textFieldId.setText(String.valueOf(id));
+                    textFieldNome.setText(nome);
+                    textFieldCarga.setText(String.valueOf(carga));
+                }
             }
         });
     }

@@ -3,6 +3,7 @@ package br.com.fafram.dao;
 import br.com.fafram.db.DBConnection;
 import br.com.fafram.interfaces.CursoDAO;
 import br.com.fafram.model.Curso;
+import br.com.fafram.utils.CursoNaoEncontradoException;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -58,7 +59,49 @@ public class CursoDAOImpl implements CursoDAO {
 
     @Override
     public Curso buscarPorId(Integer id) {
-        return null;
+        String sql = "SELECT * FROM cursos WHERE id=?";
+        Curso curso = null;
+        try (
+                Connection conn = DBConnection.createConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+        )
+        {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                curso = new Curso();
+                curso.setId(rs.getInt("id"));
+                curso.setNome(rs.getString("nome"));
+                curso.setCargaHoraria(rs.getInt("carga_horaria"));
+            } else {
+                throw new CursoNaoEncontradoException("Curso com ID " + id + " não econtrado!");
+            }
+        } catch (CursoNaoEncontradoException | SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return curso;
+    }
+
+    @Override
+    public Curso buscarPorId2(Integer id) throws SQLException, CursoNaoEncontradoException {
+        String sql = "SELECT * FROM cursos WHERE id=?";
+        Curso curso = null;
+        try (
+                Connection conn = DBConnection.createConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                curso = new Curso();
+                curso.setId(rs.getInt("id"));
+                curso.setNome(rs.getString("nome"));
+                curso.setCargaHoraria(rs.getInt("carga_horaria"));
+            } else {
+                throw new CursoNaoEncontradoException("Curso com ID " + id + " não econtrado!");
+            }
+        }
+        return curso;
     }
 
     @Override

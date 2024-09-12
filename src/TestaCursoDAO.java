@@ -1,6 +1,8 @@
 import br.com.fafram.dao.CursoDAOImpl;
 import br.com.fafram.model.Curso;
+import br.com.fafram.utils.CursoNaoEncontradoException;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class TestaCursoDAO {
@@ -19,6 +21,21 @@ public class TestaCursoDAO {
             System.out.println(curso.getNome());
             System.out.println(curso.getCargaHoraria());
             System.out.println("-------------");
+        }
+
+        Curso c = cursoDAO.buscarPorId(1);
+        System.out.println("Nome: " + c.getNome());
+
+        c.setNome("Sistemas atualizado");
+
+         cursoDAO.atualizar(c);
+
+         cursoDAO.deletar(1);
+
+        try {
+            cursoDAO.buscarPorId2(1);
+        } catch (CursoNaoEncontradoException | SQLException e) {
+            System.out.println(e.getMessage());;
         }
     }
 }
